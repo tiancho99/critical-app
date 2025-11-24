@@ -1,8 +1,17 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+=======
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
+>>>>>>> 9c87d5f (Critical API v1)
 .Python
 build/
 develop-eggs/
@@ -202,111 +211,3 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
-# Virtual Environments
-venv/
-env/
-ENV/
-env.bak/
-venv.bak/
-.venv/
-
-# Environment variables
-.env
-.env.local
-.env.*.local
-*.env
-
-# Database
-*.db
-*.db-journal
-*.sqlite
-*.sqlite3
-products.db
-
-# IDE - VSCode
-.vscode/
-*.code-workspace
-
-# IDE - PyCharm
-.idea/
-*.iml
-*.iws
-*.ipr
-
-# IDE - Jupyter Notebook
-.ipynb_checkpoints
-
-# IDE - Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# OS - macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-Icon
-._*
-.Spotlight-V100
-.Trashes
-
-# OS - Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-
-# OS - Linux
-*~
-.directory
-.Trash-*
-
-# AWS
-.aws/
-*.pem
-*.key
-*.p12
-*.pfx
-*.crt
-*.cer
-
-# Logs
-*.log
-logs/
-*.log.*
-
-# Testing
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.hypothesis/
-*.cover
-*.py,cover
-
-# Distribution / packaging
-*.tar.gz
-*.zip
-*.rar
-*.7z
-dist/
-build/
-*.whl
-
-# Deployment packages
-deployments/
-*.tar.gz
-!package-for-deployment.sh
-
-# Temporary files
-*.tmp
-*.temp
-*.swp
-*.swo
-*~
-.cache/
-
-# Application specific
-user-data.log
-/var/log/user-data.log
-
->>>>>>> 9c87d5f (Critical API v1)
