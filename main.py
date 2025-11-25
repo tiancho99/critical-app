@@ -1,5 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status
-from fastapi import Query
+from fastapi import FastAPI, Depends, HTTPException, status, Query, APIRouter
 from sqlmodel import Session
 from typing import List
 from contextlib import asynccontextmanager
@@ -22,20 +21,24 @@ app = FastAPI(
     version=settings.API_VERSION,
     lifespan=lifespan
 )
+router = APIRouter()
 
+@router.get("/")
+def root():
+    return {"status": "Welcome to the Product Catalog API"}
 
-@app.get("/health")
+@router.get("/health")
 def health_check():
     return {"status": "OK"}
 
 
-@app.post("/products", response_model=ProductRead, status_code=status.HTTP_201_CREATED)
+@router.post("/products", response_model=ProductRead, status_code=status.HTTP_201_CREATED)
 def create_product(product: ProductCreate, session: Session = Depends(get_session)):
     """Create a new product"""
     return ProductCRUD.create(session, product)
 
 
-@app.get("/products", response_model=List[ProductRead])
+@router.get("/products", response_model=List[ProductRead])
 def get_products(
     name: str = Query(default=None, description="Name of the product"),
     description: str = Query(default=None, description="Description of the product"),
@@ -64,7 +67,7 @@ def get_products(
     return ProductCRUD.filter_products(session, filters, skip=skip, limit=limit)
 
 
-@app.get("/products/{product_id}", response_model=ProductRead)
+@router.get("/products/{product_id}", response_model=ProductRead)
 def get_product(product_id: UUID, session: Session = Depends(get_session)):
     """Get a product by ID"""
     product = ProductCRUD.get_by_id(session, product_id)
@@ -76,7 +79,7 @@ def get_product(product_id: UUID, session: Session = Depends(get_session)):
     return product
 
 
-@app.put("/products/{product_id}", response_model=ProductRead)
+@router.put("/products/{product_id}", response_model=ProductRead)
 def update_product(
     product_id: UUID,
     product_update: ProductUpdate,
@@ -92,7 +95,7 @@ def update_product(
     return product
 
 
-@app.delete("/products/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/products/{product_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_product(product_id: UUID, session: Session = Depends(get_session)):
     """Delete a product"""
     success = ProductCRUD.delete(session, product_id)
@@ -103,3 +106,5 @@ def delete_product(product_id: UUID, session: Session = Depends(get_session)):
         )
     return None
 
+
+app.include_router(router, prefix="/api/v1")
