@@ -1,6 +1,5 @@
 from typing import List, Optional
 from sqlmodel import SQLModel, Field, Session, select, func
-from datetime import datetime
 import datetime as dt
 from uuid import UUID, uuid4
 
@@ -16,8 +15,8 @@ class Product(SQLModel, table=True):
     category: str = Field(min_length=1, max_length=100, description="Product category", index=True)
     stock: int = Field(ge=0, description="Stock quantity (must be >= 0)", default=0)
     sku: Optional[str] = Field(default=None, max_length=50, description="Stock Keeping Unit", unique=True, index=True)
-    created_at: datetime = Field(default_factory=datetime.now(dt.timezone.utc))
-    updated_at: datetime = Field(default_factory=datetime.now(dt.timezone.utc))
+    created_at: dt.datetime = Field(default_factory=dt.datetime.now(dt.timezone.utc))
+    updated_at: dt.datetime = Field(default_factory=dt.datetime.now(dt.timezone.utc))
 
 
 # Pydantic Models for API (Request/Response)
@@ -45,8 +44,8 @@ class ProductUpdate(SQLModel):
 
 class ProductRead(ProductBase):
     id: UUID
-    created_at: datetime
-    updated_at: datetime
+    created_at: dt.datetime
+    updated_at: dt.datetime
 
     class Config:
         json_schema_extra = {
@@ -77,10 +76,7 @@ class ProductCRUD:
     @staticmethod
     def create(session: Session, product: ProductCreate) -> Product:
         """Create a new product"""
-        db_product = Product(**product.model_dump())
-        db_product.created_at = datetime.now(dt.timezone.utc)
-        db_product.updated_at = datetime.now(dt.timezone.utc)
-        
+        db_product = Product(**product.model_dump(), created_at=dt.datetime.now(dt.timezone.utc), updated_at=dt.datetime.now(dt.timezone.utc))
         session.add(db_product)
         session.commit()
         session.refresh(db_product)
@@ -139,7 +135,7 @@ class ProductCRUD:
         for field, value in update_data.items():
             setattr(db_product, field, value)
         
-        db_product.updated_at = datetime.utcnow()
+        db_product.updated_at = dt.datetime.now(dt.timezone.utc)
         session.add(db_product)
         session.commit()
         session.refresh(db_product)
@@ -171,7 +167,7 @@ class ProductCRUD:
             return None
         
         db_product.stock = max(0, db_product.stock + quantity)  # Prevent negative stock
-        db_product.updated_at = datetime.utcnow()
+        db_product.updated_at = dt.datetime.now(dt.timezone.utc)
         session.add(db_product)
         session.commit()
         session.refresh(db_product)
